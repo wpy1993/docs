@@ -4,4 +4,28 @@
 - webpack 还是基于tabable这个框架
 
 
-- https://mp.weixin.qq.com/s/SbJNbSVzSPSKBe2YStn2Zw
+- 流程总览
+1. 初始化阶段 - 创建compiler
+2. 构建阶段 - make
+3. 生成阶段 - seal && emitAssets
+Q: 什么时候创建的Compilation
+
+- 初始化阶段
+new Webpack --> createCompiler --> [getNormalizedWebpackOptions、 applyOptions、 new Compiler、 new WebpackOptionApply().process] --> compiler.run --> compiler.compile
+
+- 构建阶段
+[compileation]addEntry --> handleModuleCreation --> factorizeModule --> addModule --> [module]build -> [loader-runner]runLoaders --> [jsParser]parse(acorn.parse) --> preWalkStatements --> blockPreWalkStatements ··· module.handleParseResult --> [HarmonyExportDependencyParserPlugin]xxx --> [module]addDependency
+
+- 生成阶段 compiler.js中，compilation.seal
+遍历 this.modules  遍历 this.chunks --> compiler.emitAssets
+
+
+
+- [webpack5](https://mp.weixin.qq.com/s/SbJNbSVzSPSKBe2YStn2Zw)
+
+
+### tree shaking
+- HarmonyExportSpecifierDependency
+- HarmonyExportExpressionDependency
+
+-  [webpack tree-shaking](https://juejin.cn/post/7002410645316436004)
