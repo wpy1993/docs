@@ -44,3 +44,11 @@
 
 ## npm peerDependencies
 - 写在这里的模块，不会被重复安装过多次。为了兼容包的版本而存在
+- 有趣的一点，npm3 - npm6 版本，不会默认安装peerDependencies中的依赖，7+又放出来了
+- 某个包放在npm包的peerDependencies中和dependencies中有什么区别？
+  - 举个例子，`react-player 2.13.0`依赖 **deepmerge >= 4.0**。我们自己的项目依赖`react-player`，同时也依赖 **deepmerge** 
+  - 如果自己的项目依赖的 **deepmerge** 和 `react-player`依赖的**deepmerge** 版本不冲突，那么没有区别
+  - 如果自己的项目依赖 **deepmerge < 4.0** （版本冲突了）
+    - 当 **deepmerge** 在 `react-player` 的 `peerDependencies`中，直接报错，`npm install` 失败
+    - 当在 `dependencies` 中 会生成两个**deepmerge**， 分别是`node_modules/deepmerge --> 2.0.0` 以及 `node_modules/react-player/node_modules/deepmerge --> 4.3.1`
+  - 综上，开发一个插件的时候，比较通用的第三方包，尽量放在`peerDependencies`中，避免使用者安装 **重复但版本号不同** 的包 - 帮助开发者不要滥用、造成性能浪费
