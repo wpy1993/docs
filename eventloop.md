@@ -64,4 +64,15 @@ IPC具体通信方式？
 
 ### 问题
 Q1: 代码中的console.log，到底是不是在渲染主线程中执行的呢？
+A: 不知道，不过猜测啊，这是浏览器的Web Api实现的，专门特供给控制台实现的，比如你不打开控制台，就不会出现这个数据。那么执行还是在主线程要执行这句话的，比如对着 `控制台这个进程` 进行IPC通信。
+另外，翻了些文章，辟谣一些内容
+1. 浏览器中的console是同步的，nodeJs中的console是异步的 —— 它调用了I/O进程； --> 错误，nodeJs中也是同步执行的
+2. console.log出来的对象，不会被垃圾回收； --> 错误，会被垃圾回收。除非你打开控制台，但是控制台是一个独立的进程，可能对象都是重新拷贝过去的呢
+
 Q2: event loop无限循环中，如何休眠
+A： 参考GPT，1. 阻塞方式，消息循环会等待事情完成，所以它被动挂起线程 2. 非阻塞方式下，通过 `非阻塞的机制` 等待事件。
+C++中可以通过`sleep_for`api进行休眠，chromium具体实现是`event_.Wait()`（操作系统决定等待时间）和 `event_.TimedWait(next_work_info.remaining_delay());`
+具体实现参考[chromium message_pump_default](https://github.com/chromium/chromium/blob/main/base/message_loop/message_pump_default.cc)
+
+Q3: html是渲染一个显示一个吗？比如FP、FCP会被堵塞吗？
+会的，执行完最初的主任务，才会渲染first paint等
