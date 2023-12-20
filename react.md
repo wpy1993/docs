@@ -40,12 +40,46 @@ React为了提升事件绑定的性能，当事件结束后，`合成事件回�
   - [React18 合成事件](https://juejin.cn/post/7183952097161773093?searchId=2023121312122986BC65F7D47F0C8FDB81)
 
 
-### vue
-- vue2 中使用Object.defineProperty(obj, key, {
-  get() {
-    // 收集依赖 + 返回value
-  },
-  set() {
-    // 设置新值 + 派发更新
-  }
-})
+
+
+### 三大核心模块
+- schedule 调度 把更新排序  npm -> scheduler  数据结构: 小顶堆
+- render 协调 高优先级进入render，决定需要改变哪些视图，操作的是fiber  npm -> reconciler  dfs深度优先 update用单向链表
+- commit 渲染  根据不同平台，把试图具体实现 npm -> renderer   react-dom | react-native | react-art
+
+- 零碎内容
+fiber + diff算法( reconciliation )
+
+优先级模型 lane模型  需要了解 二进制掩码
+fiber架构 并发模型，类似js中的generator
+
+class 和 function/hooks 就是面向对象和函数式编程
+function 有更多的束缚，所有有更多的优化方式；class 太灵活了
+
+其实vue更快
+
+代数效应 - hooks为了解决class中的副作用
+
+
+### react build步骤
+1. the createElement function
+2. the render function
+3. concurrent mode
+4. fibers
+5. render and commit phases
+6. reconciliation
+7. function components
+8. hooks
+
+#### fiber
+> 做三件事情
+1. 添加element到dom
+2. 为eleemnt的children创建fibers tree
+3. 选择下一个工作单元
+
+fiber关系网络，是个链表，有三个字段，child | parent | sibling
+- child和sibling都是唯一的，比如 仅第一个child、最紧挨着的sibling
+- 符合树结构的深度优先遍历。顺序：1. child 2. sibling 3. parent找sibling (uncle)
+
+
+一个fiber生成自function components，他是没有dom节点的；children也是不能直接从props中拿，而是要执行function后的return值

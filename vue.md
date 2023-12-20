@@ -2,6 +2,17 @@
 
 > vue，数据驱动的一个UI渲染框架。2.x通过 Object.defineProperty()中的setter、getter实现数据订阅通知。3.x通过 new Proxy进行数据订阅通知
 
+
+### vue2 defineProperty
+- vue2 中使用Object.defineProperty(obj, key, {
+  get() {
+    // 收集依赖 + 返回value
+  },
+  set() {
+    // 设置新值 + 派发更新
+  }
+})
+
 ### 常见优化手段
 - vue-for使用key
   - vue-for 使用 `稳定且唯一`的 key 。比如index是唯一，但是不稳定
