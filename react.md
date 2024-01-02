@@ -83,3 +83,4 @@ fiber关系网络，是个链表，有三个字段，child | parent | sibling
 
 
 一个fiber生成自function components，他是没有dom节点的；children也是不能直接从props中拿，而是要执行function后的return值
+
