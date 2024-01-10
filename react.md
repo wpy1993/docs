@@ -84,3 +84,41 @@ fiber关系网络，是个链表，有三个字段，child | parent | sibling
 
 一个fiber生成自function components，他是没有dom节点的；children也是不能直接从props中拿，而是要执行function后的return值
 
+### build your own react 流程逻辑
+
+`render`(reactEle, realDom) --> set `wipRoot` & clear `deletions` & `nextUnitOfWork  = wipRoot`
+--> **meanwhile** `workLoop`  (which is infinity running by `requestIdleCallback`) `is triggered` 
+--> workLoop `performUnitOfWork( nextUnitOfWork )` --> if all done, to `commitRoot`
+  --> `performUnitOfWork` --> fiber.type === function ? `updateFunctionComponent` : `updateHostComponent`
+    --> function  save sth to `wipFiber` & `reconcileChildren`
+    --> host/class  `createDom`(if !fiber.dom) & `reconcileChildren`
+      --> createDom is real `document.createElement/TextNode` & `updateDom`
+      --> updateDom is throw away `old event | domProps` and `add new event props`
+    --> reconcileChildren`(fiber, child element)`  create `new fiber chain` & `delections collect old different fiber`
+  --> return `child` else `sibling` else `parent's sibling` else `undefined`
+  --> `commitRoot`， `commitWork` every deletion & `commitWork fiber.child` & `wipRoot with currentRoot` exchange
+  --> commitWork's job
+    --> remove fibers which does not have `dom`
+    --> doms `connect` eg `append new` | `change exit` | `commitDeletion delete`
+    --> loop to commitWork for child and sibling
+    --> commitDeletion just `removeChild`
+  
+> 可以发现，不知道最初的fiber怎么来的，jsx的转译工作没有涉及就开始render了。最后的dom怎么添加也没有说，这里仅仅是生成了一条完整简约的，带有dom这个属性的 新fiber
+
+workLoop:
+- 不停的执行 `performUnitOfWork` 并且返回新的 `nextUnitWork`. 期间有`shouldYield` 进行中断判断
+  - shouldYield 是在while true中，每次循环都计算一次 `timeRemaining` ,如果为 `0` 了，就break这个while
+- 如果没有 `nextUnitWork` 了，进入到 `commitRoot`
+- `wipRoot` 就是最初的 `fiber`，也是 `workLoop` 一直在处理的 `长链表`
+
+
+fiber{
+  dom: createElement | createTextNode,
+  props: 
+  type
+  alternate
+  effectTag: PLACEMENT | UPDATE | DELETION
+  parent
+  child
+  sibling
+}
