@@ -63,6 +63,8 @@
   - update阶段，Reconciler 将 fiber对比，生成新fiber、并根据俄对比结果为 Fiber节点 打上标记
 
 
+> 下面将逻辑，好多 以为是 `memorizedState`，其实源码中就是 `memoizedState`
+
 ### render阶段
 #### 流程概览
 - render阶段流程 开始于 performSyncWorkOnRoot or performConcurrentWorkOnRoot ，取决于同步更新还是异步更新
@@ -235,7 +237,7 @@
 
 - UpdateQueue 是 一个 list => Array<Queue>
   - `Queue对象`里面，关键字段有 baseState, shared.pending
-  - shared.pending 放置着 需要被update的多个states，链表的形式存储，然后将其循环遍历，低优先级的被跳过，形成一条新的`memorizedState`，也就是上面的baseState
+  - shared.pending 放置着 需要被update的多个states，链表的形式存储，然后将其循环遍历，低优先级的被跳过，形成一条新的`memoizedState`，也就是上面的baseState
 
 
 #### 优先级
@@ -283,27 +285,27 @@ this.forceUpdate，和this.setState类似，区别
 
 ### Hooks
 Hooks能最大限度的发挥 `Concurrent Mode`的潜力
-- FunctionComponent对应的fiber -> `fiber = {memorizedState: hooks, stateNode: App}`
-- `hooks`是一个 链表 ，单一的一个hook -> `hook = {queue: {pending: null}, memorizedState: initialState, next: null}`
+- FunctionComponent对应的fiber -> `fiber = {memoizedState: hooks, stateNode: App}`
+- `hooks`是一个 链表 ，单一的一个hook -> `hook = {queue: {pending: null}, memoizedState: initialState, next: null}`
 - 每一个 `useState` 对应一个 `hook` 对象。调用`useState`时，第二个参数（eg setNum）产生的`update` 保存在对应的`hook.queue中`
 
-- hook的触发，根据 fiber --> `current || current.memorizedState` 判断使用 哪个对象 --> `HooksDispatcherOnMount` or `HooksDispatchOnUpdate`
+- hook的触发，根据 fiber --> `current || current.memoizedState` 判断使用 哪个对象 --> `HooksDispatcherOnMount` or `HooksDispatchOnUpdate`
 
-- `hook.memorizedState` 类似于 `fiber.updateQueue`;
-  - `fiber.memorizedState` 是`FunctionComponent`对应`fiber`保存的`hooks`链表
-  - `hook.memorizedState` 是`Hooks`链表中保存的 `单一hook` 对应的数据
-    - `useState` `useReducer`， `memorizedState`中存储的是它的值`state`
+- `hook.memoizedState` 类似于 `fiber.updateQueue`;
+  - `fiber.memoizedState` 是`FunctionComponent`对应`fiber`保存的`hooks`链表
+  - `hook.memoizedState` 是`Hooks`链表中保存的 `单一hook` 对应的数据
+    - `useState` `useReducer`， `memoizedState`中存储的是它的值`state`
     - `useEffect`存里面的函数
     - `useRef` 存储`{current: 1}`
     - `useMemo`存储着`[callback(), depA]`
-    - 另外，`useContext`是没有`memorizedState`的
+    - 另外，`useContext`是没有`memoizedState`的
 
 - `useState` `useReducer`是Redux的作者Dan带来的。`useState`本质上，只是**预置了reducer的useReducer**
 - 他们的工作流程，可以分为`声明阶段`和`调用阶段`
 - 声明阶段
   - 调用`renderWithHooks`方法， 方法内部，执行`FunctionComponent`对应函数(即`fiber.type`)
   - mount时， 调用 `mountReducer` or `mountState`
-  - 它俩此时的区别，就在于`[hook.memorizedState, dispatch]` 中，dispatch有一个参数`lastRenderReducer`， useState中它是`basicStateReducer`, useReducer中它是普通的入参 `reducer`。 不过这两个reducer都是函数啊，不是变量
+  - 它俩此时的区别，就在于`[hook.memoizedState, dispatch]` 中，dispatch有一个参数`lastRenderReducer`， useState中它是`basicStateReducer`, useReducer中它是普通的入参 `reducer`。 不过这两个reducer都是函数啊，不是变量
   - update时，都调用 `updateReducer` --> 找到 `hook`， 根据 `update` 计算该hook的 `新的state` 并返回
   - `didScheduleRenderPhaseUpdate` 这个变量，判断是否是 `render阶段` 触发的更新
 - 调用阶段
@@ -319,6 +321,35 @@ Hooks能最大限度的发挥 `Concurrent Mode`的潜力
 - 上一次的被全部销毁`unmountEffects`后，再全部执行下一次的回调
 
 #### useRef
+useRef() 就是返回一个 `{current: xxx}`
+ref的工作流程分为两部分
+- `render阶段` 为 含有`ref属性的fiber` 添加 `Ref effectTag`
+- `commit阶段` 为 包含 `Ref effectTag 的 fiber` 执行对应操作
+
+
+#### useMemo & useCallback
+`mount阶段`
+- mountMemo 会把回调函数执行后的value保存
+- mountCallback 会把回调函数 直接作为value保存
+`update阶段`
+- 基本同上
+
+
+### Concurrent Mode
+底层架构   —— Fiber
+架构驱动力 —— Scheduler
+架构运行策略 —— lane模型
+上层实现  —— batchedUpdates  Suspense  useDeferredValue
+
+`fiber结构` 把 `单个组件` 作为`工作单元`, 组件为粒度
+`Scheduler调度器` 配合时间切片，为每个 `工作单元` 分配一个 `可运行时间`
+`lane模型` 控制不同优先级之间的关系和行为
+
+- scheduler 模拟 `requestIdleCallback` 用的是 `messageChannel` 如果不支持，就`setTimeout 0`
+
+- taskQueue 和 timerQueue
+- 取出taskQueue，就根据拿出来的是function or value 决定是否执行过
+- TODO 没彻底读懂
 
 
 
