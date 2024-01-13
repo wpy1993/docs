@@ -94,4 +94,7 @@ loop: while() {
   - `5++` 错误， `5` 是具体的值，不能被这个运算符操作
   - `++i++` 错误， 因为 `i++` 返回的是个具体的值，无法继续进行 `++5` 这个操作
   - ps: `i++` 优先级 高于 `++i`, 虽然好像这个信息没啥用...
-  
+
+#### browser api
+- window.atob   ASCII to binary 解密
+- window.btoa   binary to ASCII 加密
