@@ -28,4 +28,20 @@ new Webpack --> createCompiler --> [getNormalizedWebpackOptions、 applyOptions�
 - HarmonyExportSpecifierDependency
 - HarmonyExportExpressionDependency
 
+webpackd 4 还需要 package.json 中 `sideEffects: false or [./src/menu1/*.js]` 属性标记，或者`usedExports`
+React的高阶组件HOC 在`usedExports` 存在问题
+webpack 会对代码进行标记 `harmony export` or `unused harmony export` , 标记完成后，打包时，Teser会把无用的模块去除
+rollup  直接维护一套有效的图，包括哪些文件，文件中的那个坐标开始，是无效的
+
 -  [webpack tree-shaking](https://juejin.cn/post/7002410645316436004)
+
+
+
+### GPT教学
+webpack构建流程分为
+- 解析 解析配置
+- 加载 加载模块
+- 转换 babel处理
+- 模块生成
+- 优化，先splitChunk进行代码切分、然后TerserPlugin进行tree-shaking、代码压缩
+- 输出

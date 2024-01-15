@@ -122,3 +122,12 @@ fiber{
   child
   sibling
 }
+
+### hooks相关
+> hooks优势： 写法上、可读性上、可复用性上、代码层级嵌套上更有优势
+
+- value = `useMemo`(() => {return value}, [state]), 相当于computed
+- fn = `useCallback`(fn, [state]),然后把fn传递给子组件用。如果没有useCallback，那么父组件每次更新都会重建fn,可能导致子组件一直重新渲染
+- `useLayoutEffect` 对比 `useEffect`, 顾名思义，在layout布局、组件完成渲染后再触发，所以可能获取更精确的布局。 useEffect在fiber树操作完毕后，不等页面渲染就触发
+- [stateMap, dispatch] = `useReducer`(reducerFn, stateMap). 便利之处在于，仅仅是处理这些state变化时，不需要setState每次都要内容不一样。比如一次是+1， 一次是 -1， 直接把state的变化所有都聚合到`reducerFn`中，通过`dispatch('INCREASE')`触发就好
+  - 也就是说，它好处是用来维护大量的`状态的聚合操作`,大量状态+操作聚合,是我对它优势的理解
