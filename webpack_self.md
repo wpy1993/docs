@@ -39,3 +39,51 @@ compiler.run(() => {
 ```
 
 > Compiler.js 文件中
+run -> 调用一些 `beforeRun` `run`的钩子 & `readRecord` --> `this.compile` -->  cb = `onCompiled` --> `done` 钩子 & finish
+
+> 所以关键在 上面的 `this.compile` 中，继续挖这个函数
+`params = newCompilationParams` 合成参数  --> `beforeCompile` 钩子 ->  `compile` 钩子 --> 创建`compilation` --> `make` 钩子 --> `finishMake` 钩子 --> compilation.`finish` --> compilation.`seal` --> `afterCompile` 钩子 --> 结束！
+
+
+> 再来看看 `newCompilationParams`
+参数内部有两个字段: `normalModuleFactory` `contextModuleFactory`
+- `normalModuleFactory`
+  - clean last  && `new NormalModuleFactory()` : NormalModuleFactory.js 执行中又发现了几个hook - **factorize -> resolve -> afterResolve -> createModule -> module**
+  - 调用 `hooks.normalModuleFactory` 钩子
+  - 返回 normalModuleFactory
+ 
+- `contextModuleFactory`
+  - `new ContextModuleFactory()`，
+  - 调用 `hooks.contextModuleFactory` 钩子
+  - 返回 contextModuleFactory
+
+
+> `this.newCompilation()`  进入到 `Compilation.js`
+cleanupLastCompilation && `new Compilation()`
+看一下 Compilation构造函数，贼大
+记几个东西， 暂时不知道有啥用 **@TODO**
+- this.mainTempaltes  this.chunkTemplates  this.runtimeTemplate  this.moduleTemplates
+- this.moduleGraph  this.chunkGraph
+- this.addModuleQueue  this..factorizeQueue  this.buildQueue  this.rebuildQueue
+
+
+> `ModuleGraph.js`
+
+
+> 还得回到 `hooks.make` 中
+我们会发现，触发了订阅 `EntryPlugin` 这个通知name
+
+然后有些中断了，回头补上，addEntry addModuleTree  this.factorizeModule
+
+
+
+
+### 关于tapable的hooks生成
+`beforeRun`: tapable [Hooks.js]: CALL_ASYNC_DELEGATE -> _createCall -> [AsyncSeriesHook.js] COMPILE -> [HookCodeFactory.js] create
+
+
+this.running = true 控制着下次run直接return
+留意this.idle, 可能和清理缓存/缓存有关
+run 内部还有beforeRun、 run、 readRecords、 compile
+
+`LazySet.js` 一些函数很好啊，可以学学
