@@ -39,10 +39,12 @@ compiler.run(() => {
 ```
 
 > Compiler.js 文件中
-run -> 调用一些 `beforeRun` `run`的钩子 & `readRecord` --> `this.compile` -->  cb = `onCompiled` --> `done` 钩子 & finish
+run() -> 调用一些 `beforeRun` `run`的钩子 & `readRecord` --> `this.compile` -->  cb = `onCompiled` --> `done` 钩子 & 结束
 
 > 所以关键在 上面的 `this.compile` 中，继续挖这个函数
 `params = newCompilationParams` 合成参数  --> `beforeCompile` 钩子 ->  `compile` 钩子 --> 创建`compilation` --> `make` 钩子 --> `finishMake` 钩子 --> compilation.`finish` --> compilation.`seal` --> `afterCompile` 钩子 --> 结束！
+
+上述的一堆钩子的call，都可能是对compiler或者compilation对象里面进行的操作。而`compilation.finish()` 和 `compilation.seal()` 这两个对象值得记一下，他们内部也有流程，但是它们属于**graph**构建完毕之后的事情，所以后面会剖析
 
 
 > 再来看看 `newCompilationParams`
@@ -76,6 +78,8 @@ cleanupLastCompilation && `new Compilation()`
 然后有些中断了，回头补上，addEntry addModuleTree  this.factorizeModule
 
 
+### compilation 的 finish 和 seal
+> 
 
 
 ### 关于tapable的hooks生成
