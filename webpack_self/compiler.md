@@ -53,8 +53,20 @@ compiler的hooks
 buildChunkGraph    —— visitModules + connectChunkGroups
 调用 hooks.afterChunk
 调用 hooks.optiomize 等一系列
-调用 hooks.optimizeTree 
+调用 hooks.optimizeTree
 
 一路狂奔，进入到了 `compiler.emitAssets（）`， 这里输出了文件资源，然后才调用callback
 所以文件输出都是在`emitAssets`，怪不得网上那么多人说答案，不说过程，太绕了
-可是问题： Compilation竟然没搜到输出的内容，难道在compiler中？ TODO
+
+
+### 文件到底在哪里生成
+通过源码断点，找到了，文件内容首先被拼接，是在 `JavascriptModulesPlugin.js` 中，针对不同的`chunk`，设置不同的 `render = xxx`
+
+内容填充流程（包括前置流程）: 
+`compilatioin.createChunkAssets` -> 把`compilation.chunk` 给 `compilation.getRenderManifest` -> 这里 `hooks.renderManifest.call` 唤起了 `javascriptModulesPlugin` -> 返回了`manifest` -> 拿着上面的`manifest`, 同步的 `getPathWithInfo` 获取路径信息 ->  然后调用上述的 `render` 函数把内容拼接了  -> 触发 `compilation.emitAsset`
+
+> 请注意一点， `compilation` 中 有个方法 `emitAsset`, 它并不创建文件； `compiler` 中有个方法 `emitAssets`, 它才是创建文件并填充内容的
+
+文件创建流程，主要在`compiler`中: 
+1. `Compiler.js` 中， `emitAssets()` -> `hooks.emit` 钩子 —> `hooks.emit` 钩子， 然后其callback -> `emitFiles`
+2. `emitFiles()`中， 读取 `compilation.getAssets()`，然后将`assets`循环着 `getContent() && doWrite()` -> 完成
