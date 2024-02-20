@@ -1,5 +1,32 @@
 ## promise & async/await
 
+### promise
+
+#### 示例一
+```js
+const p1 = new Promise((resolve, reject) => {
+  console.log(1)
+  resolve(3)
+  console.log(2)  // 这句话依旧是可执行的
+})
+const p2 = p1.catch(e => 4)
+console.log(p2) // Promise {<pending>}
+```
+
+1. `resolve()/reject()` 并不会导致后续的代码不执行
+2. 关于p2， 因为上述代码没有失败，所以`.catch`没生效，所以可以认为 `p1 = p2`
+3. `p1`整体是同步执行的，但是它的`.then`，是要扔到微队列中的，所以再快，也得等等
+
+
+#### 示例二
+
+```js
+Promise.resolve(1).then(2).then(Promise.resolve(3)).then(console.log)
+```
+
+1. `then(2)` `then(Promise.resolve(3))` 里面不是函数，那么它相当于一句无效代码，返回的Promise也是跟着上一个有效的走。
+2. 所以精简一下就是 `Promise.resolve(1).then(console.log)`, 末尾就是 console.log(1) --> 打印1
+
 ### async
 
 #### 示例一

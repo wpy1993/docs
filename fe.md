@@ -34,7 +34,7 @@ GUI:  Graphic User Interface  图形操作界面
 - 语言问题 兼容性、语言缺陷
   - css css-in-js styled-components 后置语言postcss？
   - js
-    - es6 有些比如Array.prototype.flatten 是水域api兼容性的，可以模拟出来；有些比如微队列、canvas，是模拟不出来的，叫语法兼容性，这个没有大而全的库
+    - es6 有些比如Array.prototype.flatten 是属于api兼容性的，可以模拟出来；有些比如微队列、canvas，是模拟不出来的，叫语法兼容性，这个没有大而全的库
     - api兼容性，polyfill(国内翻译为 垫片，英文翻译为填充物)。一般99%都是使用**core-js**这个大而全库，解决兼容性问题
     - 语法兼容性（比如promise微队列、解构、 webApi）,一般称之为 `转换工具 syntax transformer (runtime)` - 无大而全的库，比如**regenerator**这个库解决 async-await 问题
     - 代码集成转换工具 - babel，搭建一个舞台，所有的转换工具都可以被集成进来 （当然大家babel也经常用来做兼容问题的处理）

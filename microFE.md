@@ -18,7 +18,7 @@
   关于`history路由操作`   `window.onpopstate`可以监听部分， history.`pushState / replaceState` 需要**重写**
 2. 匹配子应用 —— 根据 `pathname` 寻找子路由
 3. 加载子应用 —— 加载和渲染放在一起，因 `innerHTML=xxx`，**浏览器安全考虑**script标签会被转义,除非`document.write`
-4. 渲染子应用 —— 主要还是js，内联script直接eval； 链接模式，fetch到数据后 `eval( res.textt() )`
+4. 渲染子应用 —— 主要还是js，内联script直接eval； 链接模式，fetch到数据后 `eval( res.text() )`
 
 
 ### qiankun
@@ -29,7 +29,7 @@
 
 ### 微前端框架举例
 - qiankun: function + proxy + with
-- mocro-app: web component
+- micro-app: web component
 - wujie: web component + iframe
 
 

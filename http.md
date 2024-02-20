@@ -13,7 +13,7 @@
 
 
 ### TCP 握手挥手
-- [TCP 头部格式图](https://cdn.xiaolincoding.com//mysql/other/format,png-20230309230534096.png)
+- ![TCP 头部格式图](https://cdn.xiaolincoding.com//mysql/other/format,png-20230309230534096.png)
 - 三次握手建立连接； 四次挥手断开连接
 - 三次握手： SYN -> SYN + ACK -> ACK
 - 四次挥手： FIN -> ACK + FIN -> ACK; 注意，第二部是两次挥手，因为服务端是分开发的，发一个ACK，然后状态更改为`CLOSED_WAIT`，再发`FIN`
