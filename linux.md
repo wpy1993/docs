@@ -9,8 +9,3 @@ find [path] [pattern] [action]
 问了下GPT，给出一条很复杂的，匹配到 `/docs/webpack.md` 的指令 —— `find ./ -type d -name "docs" -exec test -e '{}/webpack.md' \; -print -prune`，了解就好
 
 -path 后面不能跟正则表达式
-
-
-#### npm init
-`npm init -y`, 这个 `-y` 就有意思了，是 yes 的意思
-搜到了指令的说明： `npm init [--yes|-y|--scope]`

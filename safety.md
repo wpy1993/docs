@@ -15,7 +15,7 @@
 `Cross-Site Request Forgery` 跨站伪造请求。 通俗地讲，B网站刻意请求A网站的接口，会自动带上A网站的cookie；B网站不会关心A网站的cookie内容
 
 如何防御
-- 关键信息不要放在cookie中，而是放在一个令牌toke中，比如叫他`csrfToken`.初始化后端给你，你存起来，每次请求自己捞出来，拼接在api后面
+- 关键信息不要放在cookie中，而是放在一个令牌token中，比如叫他`csrfToken`.初始化后端给你，你存起来，每次请求自己捞出来，拼接在api后面
 - 浏览器也在努力，纷纷开启`SameSite`选项，让`cookie`无法在 发起请求的域名和被请求的域名不一致时，仍然流通
 - 后端也做判断，判断`request header` 中的`Referer`字段和本服务器域名是否一致 —— 但是容易被伪造
 

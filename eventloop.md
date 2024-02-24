@@ -76,3 +76,6 @@ C++中可以通过`sleep_for`api进行休眠，chromium具体实现是`event_.Wa
 
 Q3: html是渲染一个显示一个吗？比如FP、FCP会被堵塞吗？
 会的，执行完最初的主任务，才会渲染first paint等
+
+Q4: requestAnimationFrame是宏任务还是微任务
+A: 它的callback，会被丢到**宏任务队列**中，但是，它被放入的时机，是不确定的，和页面渲染完成有关，所以和 `setTimeout 0` 放在一起时，无法说出来，谁先执行
