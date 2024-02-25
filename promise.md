@@ -27,6 +27,38 @@ Promise.resolve(1).then(2).then(Promise.resolve(3)).then(console.log)
 1. `then(2)` `then(Promise.resolve(3))` 里面不是函数，那么它相当于一句无效代码，返回的Promise也是跟着上一个有效的走。
 2. 所以精简一下就是 `Promise.resolve(1).then(console.log)`, 末尾就是 console.log(1) --> 打印1
 
+
+#### 示例三
+```js
+const pro1 = new Promise((resolve, reject) => {
+  resolve(1);
+});
+
+pro1
+  .then((data) => {
+    console.log(data);
+    return 3;
+  })
+  .then((data) => {
+    console.log(data);
+    return 4;
+  })
+
+pro1
+  .then((data) => {
+    console.log(data);
+    return 11;
+  })
+  .then((data) => {
+    console.log(data);
+    return 12;
+  })
+```
+
+> 答案 1 1 3 11   
+> 如果不断的.then, 两个也是交替的。想要表达的是，微任务队列，可以认为`只有一个`，**不会**出现 `微任务产生的微任务，会存在于 子微任务队列 中` 这件事❌
+
+
 ### async
 
 #### 示例一
@@ -115,3 +147,16 @@ fn();
 答案是 123、 foo 1、 foo 2、 end
 
 也就是说， 第一次，有两个微队列， **await 1后面** 和 **console end**，但是执行微队列 **await 1** 的时候，会不停地优先执行衍生的微队列 **await 2**, 然后才回到 **console end** 这个父级微队列
+
+
+
+## 附： 判断Promise
+```js
+
+function isPromise(obj) {
+  return !!(obj && typeof obj === 'object' && typeof obj.then === 'function')
+}
+```
+> 为什么这么简单？为什么不用 `instanceof Promise`这样直接判断？  
+> 因为，我们认为，只要符合Promise A+规范，即使不是官方的Promise，也是被认可的Promise  
+> 所以判断的关注点应该在是否为对象以及then是否合理
