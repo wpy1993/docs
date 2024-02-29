@@ -149,14 +149,28 @@ fn();
 也就是说， 第一次，有两个微队列， **await 1后面** 和 **console end**，但是执行微队列 **await 1** 的时候，会不停地优先执行衍生的微队列 **await 2**, 然后才回到 **console end** 这个父级微队列
 
 
+### Promise API
+先说一下，Promise的基本走流程:
+`Promise.then(res => {}, err => {}).catch(e => {}).then()`, 如果 `then`里面没有第二个function，则失败时进入`catch`中; `catch/finally` 之后依旧可以继续`then`
 
-## 附： 判断Promise
+然后，静态方法如下
+- Promise.all 全部成功就成功，有一个失败，就进入到第一个失败的去（按照数组排列）
+- Promise.any 比赛出来第一个**成功**的结果, 全都失败的话，进入失败中，返回**所有失败内容的数组**
+  - 全都失败: `[err1, err2, err3]`
+- Promise.race 比赛出来第一个完成的，失败走失败的路，成功走成功的路
+- Promise.allSettled 全部完成后进入，一定进入第一个参数中，返回列表格式如下
+  - `[{ status: 'rejected', reason: 1 }, { status: 'fulfilled', value: 2 }]`
+
+
+### 附： 判断Promise
+
 ```js
 
 function isPromise(obj) {
   return !!(obj && typeof obj === 'object' && typeof obj.then === 'function')
 }
 ```
+
 > 为什么这么简单？为什么不用 `instanceof Promise`这样直接判断？  
 > 因为，我们认为，只要符合Promise A+规范，即使不是官方的Promise，也是被认可的Promise  
 > 所以判断的关注点应该在是否为对象以及then是否合理
