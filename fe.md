@@ -60,7 +60,7 @@ GUI:  Graphic User Interface  图形操作界面
     - 额外提一句，sass语法，.scss 和 .sass 后缀都是ok的，有细微的书写区别，但是无关紧要
 - 后处理器： 生成css后，还要生成厂商前缀、代码压缩、代码剪枝、类名冲突
   - 对应的分别可以是 autoprefixer\ cssnano\ purgecss\ cssModule
-  - 可以使用`PostCss` 作为平台，把它看作CSS届的babel
+  - 可以使用`PostCss` 作为平台，把它看作CSS界的babel
   - extra: postcss是把css转换成css，但是如果这个transfer支持sass，那么postcss不是也可以是`预编译+后编译`都支持嘛，不一定非要认为它是后置处理器
 
 

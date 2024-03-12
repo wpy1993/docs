@@ -65,7 +65,13 @@ module.exports = {
 refer
 [Custom output filename](https://webpack.js.org/guides/asset-modules/#custom-output-filename)
 
-小知识点
-raw-loader to import a file as a string 直接获取内容并变成字符串，适合文本资源
-url-loader to inline a file into the bundle as a data URI 变成dataUrl: base64
-file-loader to emit a file into the output directory  纯输出/copy
+小知识点  
+raw-loader to import a file as a string 直接获取内容并变成字符串，适合文本资源  
+url-loader to inline a file into the bundle as a data URI 变成dataUrl: base64  
+file-loader to emit a file into the output directory  纯输出/copy  
+
+css-loader，就是解析css，包括是 url() 和 @import 等  
+style-loader 把样式内容植入到dom的style属性中
+MiniCssExtractPlugin 把本该在js bundle的中的css内容，抽出来，变成css文件
+开发环境，一般用style-loader + css-loader，产生css文件的同时，把css样式写到 dom的style属性中，方便调试  
+生产环境，就不用style-loader了，产生css文件后，把css从js bundle文件抽取出来，也就是 MiniCssExtractPlugin + css-loader

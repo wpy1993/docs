@@ -8,7 +8,7 @@
 - https 加密方式 （非对称加密建立连接、对称加密进行数据通信）
 - 简单请求 和 预检请求(preflight request)
 - CORS
-- [chrome浏览器的same-sit](./safety.md#samesite)
+- [chrome浏览器的same-site](./safety.md#samesite)
 - http缓存
 
 
