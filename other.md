@@ -101,3 +101,19 @@ loop: while() {
 #### browser api
 - window.atob   ASCII to binary 解密
 - window.btoa   binary to ASCII 加密
+
+#### charles 报错
+打开macOS版charles，点击proxy -> macOS proxy, 报错如下
+> Charles cannot configure your proxy settings while it is on a read-only volume. Perhaps you are running Charles from the disk image? If
+> so, please copy Charles to the Applications folder and run it again. Otherwise please ensure that Charles is running on a volume that is  
+> read-write and try again.
+
+solution
+> sudo chown -R root "/Applications/Charles.app/Contents/Resources"
+> sudo chmod -R u+s "/Applications/Charles.app/Contents/Resources"
+
+
+#### uniapp
+hbuilder的Dcloud团队开源，比微信小程序更早，但是书写方式基于vue，api类似微信小程序。对标竞品 - TaroJs(基于react)、mpvue(美团版)
+1. 提供自己的组件，而尽量不允许使用 host component 比如 div。 方便构建时把 组件 一键转换成目标类型支持的
+2. 各种api，比如request、setStorage，都绑定在uni这个大对象中。方便构建时把 内部方法 一键转换成目标类型支持的

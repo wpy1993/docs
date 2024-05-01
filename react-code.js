@@ -175,7 +175,7 @@ completeUnitOfWork() 有条件的自下而上
         commitBeforeMutationEffectsOnFiber(nextEffect)
         begin + complete 就是为了向上找有效的父dom节点
 
-  操作finishedWork，也就是 commitMutationEffects(root, finishedWork)
+  操作finishedWork，也就是 commitMutationEffects(root, finishedWork) // 这个就是useEffect的执行
     commitMutationEffectsOnFiber(finishedWork, root)
     因为tag，注意进入hostcomponent还是default
     进入到 recursivelyTraverseMutationEffects(root, finishedWork);
