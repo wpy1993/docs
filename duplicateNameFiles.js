@@ -13,7 +13,7 @@ const fileDuplicateMap = {};
 
 const dealDuplicateNameFiles = async (fileList, folderPath) => {
   for await (const filePath of fileList) {
-    const fileName = filePath.split("/").pop()[0];
+    const fileName = filePath.split("/").pop();
     const fileBuffer = fs.readFileSync(filePath, "base64");
     const fileMd5 = md5(fileBuffer);
     if (md5Map[fileName]) {
