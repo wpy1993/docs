@@ -1,5 +1,10 @@
 # flutter 知识点
 
+> Flutter 项目有两大核心，一个是视图、一个是逻辑；  
+> web前端项目中，视图是html + css / vue-template / jsx，逻辑是js/ts；  
+> Flutter项目中， 视图是Flutter、逻辑是Dart
+
+
 Widget
  - 代表一个UI元素的配置信息，是一个抽象类，不一定要有布局
  - 四颗树 --> Widget树、Element树、Render树、Layer树
