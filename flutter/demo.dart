@@ -98,3 +98,59 @@ void func3() {
 
   Never nn = throw ();
 }
+
+final nowTime = func3();
+
+int? i;
+
+int getY() {
+  return i! + 8;
+}
+
+Function? getX;
+
+dynamic funGetX() {
+  // if (getX != null) {
+  getX?.call();
+  // }
+}
+
+foo() {}
+
+bool isTrue(bool param) => param;
+
+void func6(int p1, int p2, [int? p3, int? p4]) {}
+
+void func7(int p1, int p2, {required int p3, int p4 = 4}) {}
+
+void useFunc() {
+  func6(1, 2, 3);
+  func7(1, 2, p3: 3, p4: 4);
+}
+
+class Persion {
+  say() {
+    print('hello');
+  }
+}
+
+mixin Walk {
+  walk() {
+    print('walk');
+  }
+}
+
+class Dog with Walk {
+  wang() {
+    print('wang');
+  }
+}
+
+class Man extends Persion with Walk {
+  say() {
+    super.say();
+    print('man say');
+  }
+}
+
+dynamic dog = new Dog();
