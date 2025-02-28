@@ -82,5 +82,28 @@ void main() {
 
 
 
+
+
+## 语法知识点
+
+
+
+### 关于类和抽象类
+
+来一个复杂的例子
+
+`class A extends B with C, D implements E, F`
+
+1. `with` 和 `implements` 都可以接入多个，而 `extends` 只能个继承一个
+2. 摆放优先级: `extends` > `with` > `implements` 
+3. `with`连接的， 是用 `mixin C {}` 创建的，属于**mixin**， 不是class；
+4. `abstract class E` 和 `class B`，都属于**class**， abstract叫**抽象类**，是说，内部的方法，并不需要立刻实现。
+5. extends 后面能跟 `class` 和 `abstract class` 创建的； with 后面只能跟 `mixin` 创建的；implements 后面能跟**三者**
+6. 如果implements，需要把 所有的继承，全都实现一遍。另外两个只需要把**未实现的函数**实现一下即可
+
+
+
+
+
 ## refer
 [Flutter实战第二版](https://book.flutterchina.club/)

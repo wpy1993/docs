@@ -574,12 +574,6 @@ ps: build 和 layout 是可以交替执行的，也就是我们经常看到的�
 
 
 
-
-
-
-
-
-
 List.generate(100) 创建长度为100的List；转换成Widget 使用 .cast();代码如下：
 
 `List.generate(100, (v) => const Text('here')).toList().cast<Widget>()`
